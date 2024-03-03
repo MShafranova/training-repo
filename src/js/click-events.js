@@ -1,19 +1,31 @@
-const seeMoreBtn = document.querySelector(`.books-btn-see-more`);
-const categoryClick = document.querySelector(`.categories-itm`);
+import { getBooksByCategory } from './booksAPI.js';
+import { renderCategoriesListMain } from './categories.js';
 
-seeMoreBtn.addEventListener('click', (event) => selectCategory(event));
-categoryClick.addEventListener('click',(event)=> selectCategory(event));
-function selectCategory(event) {
-    const selectedCategory = event.target.list_name;
-    if (selectedCategory) {
-      handleClick(selectedCategory);
+const seeMoreBtn = document.querySelector(`.books-btn-see-more`);
+seeMoreBtn.addEventListener('click', selectCategory);
+
+const categoryClick = document.querySelector(`.categories-itm`);
+categoryClick.addEventListener('click', (event) => selectCategory(event));
+
+document.querySelector('.categories-list').addEventListener('click', (event) => {
+    if (event.target.classList.contains('categories-itm')) {
+        const selectedCategory = event.target.list_name;
+        if (selectedCategory) {
+            handleClick(selectedCategory);
+        }
     }
+});
+
+
+export async function selectCategory(event) {
+  const selectedCategory = event.target.list_name || 'All categories';
+  await handleClick(selectedCategory);
 }
-async function handleClick(category) {
+
+export async function handleClick(category) {
   try {
     const categoryBooks = await getBooksByCategory(category);
-    // Функція для рендерингу категорій
-    displayCategoryBooks(category, categoryBooks);
+    renderCategoriesListMain(categoryBooks);
   } catch (error) {
     console.error(`Error handling category ${category}:`, error);
   }

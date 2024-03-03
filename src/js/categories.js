@@ -1,71 +1,60 @@
-import { addMediaWidth } from "./media-width";
+//Render one book
+function renderOneBook(books) {
+  const booksRendered = books.map(el => {
+      const {_id, book_image, title, author} = el;
+      return `<li class="books-box-itm" id="${_id}">
+      <div class="books-box-wrap">
+              <img
+                class="books-img"
+                src="${book_image}"
+                alt="${title}"
+              />
+              <div class="books-overlay">
+                <a href="#" data-id="${_id}" class="books-overlay-text">
+                quick view </a>
+              </div>
+            </div>
+            <div class="books-box-desc">
+              <p class="books-box-desc-title">${title}</p>
+              <p class="books-box-desc-author">${author}</p>
+            </div> 
+            </li>`;
+  }).join('');
 
-export async function murkupCategoryList(fetch) {
-  return await fetch.data.map(({ list_name }) => { return `<li class="category__home-itm" data-category="${list_name}">${list_name}</li>` }).join('');
+  return booksRendered;
+} 
+//Render top books
+export const renderTopBooks = (data, booksPerRow) => {;
+  const categoriesTopBooks = data.map(el => {
+      const categorieName = el.list_name;
+      const books = renderOneBook(el.books.slice(0, booksPerRow))
+      return `<div class="books-box-holder">
+        <h3 class="books-box-subtitle">${categorieName}</h3>
+        <ul class="books-box-list">${books}</ul>
+        <button data-categorieName="${categorieName}" class="books-btn-see-more" type="button">see more</button>
+      </div>`;
+  }).join('');
+
+  return `<div class="books-container"><h2 class="books-title">Best Sellers Books</h2>${categoriesTopBooks}</div>`;
+}
+//Render categories
+export const renderCategoriesList = (data) => {
+  const categoriesItems = data.map(el => {
+    return `<li class="categories-itm"><a href="#" data-categorieName="${el.list_name}">${el.list_name}</a></li>`;
+  }).join('');
+
+  return `<li class="categories-itm js-categories-current "><a href="#" data-categorieName="">All categories</a></li>${categoriesItems}`;
+}
+//Render category books
+export const renderBooksByCategory = (data, categoryName) => {
+  const books = renderOneBook(data)
+  const categoryMarkup = `<div class="books-category-box visually-hidden">
+<h2 class="books-box-title">${categoryName}</h2>
+        <ul class="books-category-list">${books}</ul>
+        </div>`;
+  return categoryMarkup;
 }
 
-async function sliceData(data) {
-
-  if (addMediaWidth() === "mobile") {
-    return makeListOfBooks(data.slice(0, 1))
-  } else if (addMediaWidth() === "tablet") {
-    return makeListOfBooks(await data.slice(0, 3))
-  } else {
-    return makeListOfBooks(data)
-  }
-}
-
-export async function murkup(data) {
-
-  return await Promise.all(data.map(async ({ list_name, books }) => {
-    return ` 
-    <div class="item-books__home"> 
-    <h3 class="js-book-categoty">${list_name}</h3> 
-    <ul class='list-books__home'>${await makeListOfBooks(books)}</ul>  
-    <button class="button see-more" data-js="${list_name}" aria-label="See more">See more</button> 
-    </div> 
-    `;
-  }));
-}
-
-export async function makeCategoryPage(category, data) {
-
-  const title = category.split(" ");
-  return ` 
-  <h2 class="block__books-title"
->${title
-      .splice(0, title.length / 2)
-      .join(' ')} <span class="block__books-colortitle">${title
-        .splice(title.length / 2, title.length)
-        .join(' ')}</span></h2> 
-        <ul class="block__books-list">${await makeListOfBooks(data)}</ul>
-        <button class="button all-categories__btn" data-js="All Categories" aria-label="All categories">All Categories</button>`;
-
-};
-
-export async function makeListOfBooks(data) {
-
-  return data.map(({ author, book_image, title, description, _id }) => {
-    return `<li class="books__itm" id=${_id} >  
-    <div class="books__wrapper"> 
-    <img class="books__image" src="${book_image}"  alt="${description}" loading="lazy"  /> 
-    <div class="books__overlay"> 
-    <p class="books__overlay-text">QUICK VIEW</p> 
-    </div> 
-    </div> 
-    <div class="books__info">  
-    <p class="books__info-title">${title}</p>  
-    <p class="books__info-author">${author}</p>  
-    </div>  
-    </li>`;
-  }
-  ).join('');
-};
-
-export async function currentCategoryTogle(value) {
-  await document.querySelector('.js-current-category').classList.remove(`js-current-category`);
-  document.querySelector(`li[data-category="${value}"]`).classList.add(`js-current-category`);
-};
 
 
 
@@ -76,146 +65,155 @@ export async function currentCategoryTogle(value) {
 
 
 
-import axios from "axios"
-import { BooksAPI } from "./fetch";
-import { makeCategoryPage } from "./functions";
-import { murkupCategoryList } from "./functions";
-import { murkup } from "./functions";
-import { addMediaWidth } from "./media-width";
-import {
-  startPreloader,
-  stopPreloader,
-  addMarkupOfPreloader,
-} from '../preloader';
-import Notiflix from "notiflix";
-import { currentCategoryTogle } from "./functions";
-import { modalAboutBook } from "../popup-about-book"
-import { scrollToStart } from "../scroll-up"
+
+
+// // Cтворення та відображення списку категорій книг
+// const categoriesList = document.querySelector('.categories-list');
+
+// export function generateCategoryListItem(book) {
+//     return `<li class='сategories-itm'><a href="">${book.list_name}</a></li>`;
+// }
+
+// export function renderCategoriesListList(books) {
+//     const markup = books.map(generateCategoryListItem).join('');
+//     categoriesList.innerHTML = markup;
+// }
+// // Функції для генерації HTML-розмітки відображення списку книг
+// // const booksBoxHolder = document.querySelector('.books-box-holder');
+
+// // function generateCategoryTitle(books) {
+// //     return `<h3 class="books-box-subtitle">${books.list_name}</h3>`;
+// // }
+
+// // Викликати функцію з назвою категорії і вставити елемент в DOM
+// // export function insertCategoryTitleIntoDOM(categoryName) {
+// //   const categoryTitleMarkup = generateCategoryTitle(categoryName);
+// //   booksBoxHolder.insertAdjacentHTML('beforeend', categoryTitleMarkup);
+// // }
+
+// export function generateMainBookHTML(book) {
+//     const { book_image, title, author, _id } = book;
+
+//     return `<li class="books-category-item">
+//             <div class="books-box-wrap">
+//               <img
+//                 class="books-img"
+//                 src="${book_image}" 
+//                 alt="${title}"
+//               />
+//               <div class="books-overlay">
+//                 <p class="books-overlay-text">quick view</p>
+//               </div>
+//             </div>
+//             <div class="books-box-desc">
+//             <p class="books-box-desc-title">${title}</p>
+//             <p class="books-box-desc-author">${author}</p>
+//             </div>
+//             </li>`;
+// }
+
+// export function generateMainBooksHTML(books) {
+//     return books.map(generateMainBookHTML).join('');
+// }
+// // Функції для генерації HTML-розмітки відображення списку книг конкретної категорії
+
+// const booksList = document.querySelector(".books-box-list")
+
+// export function renderCategoriesListMain(books) {
+//     const mainMarkup = generateMainBooksHTML(books);
+//     insertMarkupIntoCategoriesMain(mainMarkup);
+// }
+
+// function insertMarkupIntoCategoriesMain(markup) {
+//     booksList.insertAdjacentHTML('beforeend', markup);
+// }
+// // -----TOP
+// export const renderTopBooks = (data, booksPerRow) => {
+//   const { book_image, title, author, _id } = book
+//   const categoriesTopBooks = data.map(el => {
+//       const categorieName = el.list_name;
+//       return `<div class="books-box-holder">
+//       <h3 class="books-box-subtitle">${categorieName}</h3>
+//       <ul class="books-box-list">
+//       <li class="books-box-itm" id="">
+//       <div class="books-box-wrap">
+//         <img
+//           class="books-img"
+//           src="${book_image}" 
+//           alt="${title}"
+//         />
+//         <div class="books-overlay">
+//           <p class="books-overlay-text">quick view</p>
+//         </div>
+//       </div>
+//       <div class="books-box-desc">
+//       <p class="books-box-desc-title">${title}</p>
+//       <p class="books-box-desc-author">${author}</p>
+//       </div>
+//     </li>
+//     </ul>
+//         <button class="books-btn-see-more" type="button" data-categorieName="${categorieName}">see more</button>
+//       </div>`;
+//   }).join('');
+
+//   return `<div class="books-container"><h2 class="books-title">Best Sellers Books</h2>${categoriesTopBooks}</div>`;
+// }
+// // ----CategoryBooks
+// export const renderBooksByCategory = (categoryName) => {
+//   const { book_image, title, author, _id } = book
+//   const categoryMarkup = `<div class="books-container">
+//   <h2 class="books-title">${categoryName}</h2>
+//   <div class="books-category-container">
+//     <ul class="books-list"></ul>
+//   </div>
+// </div>
+// <div class="books-category-box visually-hidden">
+// <h3 class="books-box-subtitle">${categorieName}</h3>
+//         <ul class="books-category-list">
+//           <li class="books-category-item">
+//             <div class="books-box-wrap">
+//               <img
+//                 class="books-img"
+//                 src="${book_image}" 
+//                 alt="${title}"
+//               />
+//               <div class="books-overlay">
+//                 <p class="books-overlay-text">quick view</p>
+//               </div>
+//             </div>
+//             <div class="books-box-desc">
+//             <p class="books-box-desc-title">${title}</p>
+//             <p class="books-box-desc-author">${author}</p>
+//             </div>
+//           </li>
+//         </ul>
+//       </div>`;
+
+//   return categoryMarkup;
+// }
 
 
 
 
-const refBooks = document.querySelector('.block__books')
-const refCategory = document.querySelector('.category__home')
-const markupBook = document.querySelector('.block__category')
-
-const bookCart = document.querySelector('.book-card__home')
-
-const bookApi = new BooksAPI();
-
-onFirstload()
-
-async function onFirstload() {
-  try {
-    const categoryApi = (await bookApi.getCategoryList());
-    refCategory.insertAdjacentHTML('beforeend', (await murkupCategoryList(categoryApi)));
-
-    const preloader = document.querySelector('#preloader');
-    preloader.firstElementChild.style.zIndex = '1002';
-  } catch (error) {
-    Notiflix.Notify.failure(`Categories was not found : ${error.message}`);
-  }
-  try {
-    const resp = (await bookApi.getTopBooks());
-    refBooks.insertAdjacentHTML('afterbegin', '<h2 class="block__books-title">Best Sellers<span class="block__books-colortitle"> Books</span></h2>');
-    refBooks.insertAdjacentHTML('beforeend', (await murkup(resp.data)).join(""));
-    stopPreloader();
-    return resp.data;
-  } catch (error) {
-    Notiflix.Notify.failure(`Books was not found : ${error.message}`);
-    stopPreloader();
-  }
-}
-refCategory.addEventListener('click', onCategoryClick);
-
-async function onCategoryClick(el) {
-  el.preventDefault();
-
-  if (el.target.classList.contains("category__home-itm")) {
-    scrollToStart();
-    refBooks.innerHTML = "";
-    refBooks.insertAdjacentHTML(
-      'afterbegin',
-      addMarkupOfPreloader()
-    );
-    startPreloader();
-    if (el.target.dataset.category === `all categories`) {
-      try {
-        const resp = (await bookApi.getTopBooks());
-        refBooks.insertAdjacentHTML('afterbegin', '<h2 class="block__books-title">Best Sellers<span class="block__books-colortitle"> Books</span></h2>')
-        refBooks.insertAdjacentHTML('beforeend', (await murkup(resp.data)).join(""));
-        currentCategoryTogle(el.target.dataset.category);
-        stopPreloader();
-      } catch (error) {
-        Notiflix.Notify.failure(`Books was not found : ${error.message}`);
-      };
-      return;
-    } else {
-      try {
-        const data = await (await bookApi.getOneCategory(`${el.target.dataset.category}`)).data;
-        refBooks.insertAdjacentHTML('beforeend', await makeCategoryPage(`${el.target.dataset.category}`, data));
-        currentCategoryTogle(el.target.dataset.category)
-        stopPreloader();
-      } catch (error) {
-        Notiflix.Notify.failure(`Books was not found : ${error.message}`);
-      };
-    }
-  };
-};
-
-refBooks.addEventListener('click', onSeeMoreClick);
-
-async function onSeeMoreClick(event) {
-  event.preventDefault();
-  const currentEl = event.target.closest('.books__itm');
-  if (currentEl) {
-    const bookId = currentEl.attributes.id.value;
-    modalAboutBook(bookId);
-  }
-
-  if (event.target.classList.contains('see-more')) {
-    scrollToStart();
-    const requestedCategory = event.target.dataset.js;
-    refBooks.innerHTML = '';
-    refBooks.insertAdjacentHTML('afterbegin', addMarkupOfPreloader());
-    startPreloader();
-    try {
-      const data = await (
-        await bookApi.getOneCategory(`${requestedCategory}`)
-      ).data;
-      refBooks.insertAdjacentHTML(
-        'beforeend',
-        await makeCategoryPage(`${requestedCategory}`, data)
-      );
-      currentCategoryTogle(`${requestedCategory}`);
-      stopPreloader();
-    } catch (error) {
-      Notiflix.Notify.failure(`Books was not found : ${error.message}`);
-    }
-  } else if (event.target.classList.contains('all-categories__btn')) {
-    scrollToStart();
-    refBooks.innerHTML = '';
-    refBooks.insertAdjacentHTML('afterbegin', addMarkupOfPreloader());
-    startPreloader();
-    try {
-      const resp = await bookApi.getTopBooks();
-      refBooks.insertAdjacentHTML(
-        'afterbegin',
-        '<h2 class="block__books-title">Best Sellers<span class="block__books-colortitle"> Books</span></h2>'
-      );
-      refBooks.insertAdjacentHTML(
-        'beforeend',
-        (await murkup(resp.data)).join('')
-      );
-      stopPreloader();
-      currentCategoryTogle("all categories");
-    } catch (error) {
-      Notiflix.Notify.failure(`Books was not found : ${error.message}`);
-    }
-  }
-};
-
-
-
-
-
+// <div class="books-box-holder">
+//       <h3 class="books-box-subtitle">${categorieName}</h3>
+//       <ul class="books-box-list">${books}
+//       <li class="books-box-itm" id="">
+//       <div class="books-box-wrap">
+//         <img
+//           class="books-img"
+//           src="${book_image}" 
+//           alt="${title}"
+//         />
+//         <div class="books-overlay">
+//           <p class="books-overlay-text">quick view</p>
+//         </div>
+//       </div>
+//       <div class="books-box-desc">
+//       <p class="books-box-desc-title">${title}</p>
+//       <p class="books-box-desc-author">${author}</p>
+//       </div>
+//     </li>
+//     </ul>
+//         <button class="books-btn-see-more" type="button" data-categorieName="${categorieName}">see more</button>
+//       </div>
