@@ -1,10 +1,11 @@
+import axios from "axios";
 const BASE_URL = 'https://books-backend.p.goit.global';
 
 // Отримання переліку категорій
 async function getCategoryList() {
   try {
     const response = await axios.get(`${BASE_URL}/books/category-list`);
-    return response.data.categories;
+    return response.data;
   } catch (error) {
     console.error('Error fetching category list:', error);
     throw error;
@@ -15,7 +16,7 @@ async function getCategoryList() {
 async function getTopBooks() {
   try {
     const response = await axios.get(`${BASE_URL}/books/top-books`);
-    return response.data.books;
+    return response.data;
   } catch (error) {
     console.error('Error fetching top books:', error);
     throw error;
@@ -26,7 +27,7 @@ async function getTopBooks() {
 async function getBooksByCategory(selectedCategory) {
   try {
     const response = await axios.get(`${BASE_URL}/books/category?category=${selectedCategory}`);
-    return response.data.books;
+    return response.data;
   } catch (error) {
     console.error(`Error fetching books for category ${selectedCategory}:`, error);
     throw error;
@@ -37,9 +38,13 @@ async function getBooksByCategory(selectedCategory) {
 async function getBookInfo(bookId) {
   try {
     const response = await axios.get(`${BASE_URL}/books/${bookId}`);
-    return response.data.book;
+    return response.data;
   } catch (error) {
     console.error(`Error fetching details for book ID ${bookId}:`, error);
     throw error;
   }
 }
+console.log(getCategoryList());
+console.log(getTopBooks());
+console.log(getBooksByCategory("Young Adult Paperback Monthly"));
+console.log(getBookInfo());
