@@ -8,6 +8,7 @@ const fetchData = async (endpoint, params = null) => {
 
   try {
     const response = await axios.get(fetchUrl, { params });
+    console.log('Data from server:', response.data)
     return response.data;
   } catch (error) {
     console.log(error);

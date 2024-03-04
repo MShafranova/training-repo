@@ -37,11 +37,11 @@ export async function showTopBooks() {
 export async function showBooksByCategory(categoryName) {
     const renderedBooks = await getBooksByCategory(categoryName);
     return showBooks(renderedBooks);
-  }
+}
   
   
-  // Function to wrap the last word in the title
-  function wrapLastWord(titleElement) {
+// Function to wrap the last word in the title
+function wrapLastWord(titleElement) {
       const textContent = titleElement.textContent.split(" ");
       const lastWord = textContent.pop();
     const updatedContent = textContent.join(" ") + (textContent.length > 0 ? ` <span class="books-title-color">${lastWord}</span>` : lastWord);
