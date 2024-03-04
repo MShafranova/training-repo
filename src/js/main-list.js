@@ -1,97 +1,4 @@
-// import { getTopBooks, getCategoryList, getBooksByCategory } from './booksAPI';
-// const booksContainer = document.querySelector('.books-box');
-// const categoriesListContainer = document.querySelector('.categories-list');
 
-// // ==============================================================
-// //Function for display books
-// export async function showTopBooks() {
-//     const windowWidth = window.innerWidth;
-//     const booksPerRow = booksPerRowFunction(windowWidth);
-//     const renderedTop = await getTopBooks(booksPerRow);
-
-//     booksContainer.innerHTML = renderedTop;
-//     wrapLastWord();
-// };
-// // ==============================================================
-// //Function for display categories
-// export async function showCategories() {
-//     const renderedCategories = await getCategoryList();
-
-//     categoriesListContainer.innerHTML = renderedCategories;
-// };
-// // ==============================================================
-// //Function for display category books
-// export async function showBooksByCategorie(categorieName) {
-//     const renderedBooks = await getBooksByCategory(categorieName);
-
-//      booksContainer.innerHTML = renderedBooks;
-//      wrapLastWord();
-// }
-// // ==============================================================
-// //Function for wrapp last title word
-// function wrapLastWord() {
-//     const title = document.querySelector('.books-box-desc-title');
-//     const textContent = title.textContent.split(" ");
-//     const lastWord = textContent.pop();
-
-//     const updatedContent = textContent.join(" ") + (textContent.length > 0 ? ` <span  class="books-title-color">${lastWord}</span>` : lastWord);
-
-//     title.innerHTML = updatedContent;
-// }
-// //Fontiono for detectiong books per row
-// function booksPerRowFunction(windowWith) {
-//     let booksCount = 3;
-
-//     if(windowWith >= 1440) {
-//         booksCount = 5;
-//     } 
-    
-//     if(windowWith < 768) {
-//         booksCount = 1;
-//     }
-
-//     return booksCount;
-// }
-
-// // ==============================================================
-// if(booksContainer) {
-//     showTopBooks();
-//     showCategories();
-
-//     categoriesListContainer.addEventListener('click', e => {
-//         e.preventDefault();
-    
-//         const target = e.target;
-    
-//         if(target.tagName === 'A') {
-//             const categorieName = target.dataset.categorieName;
-    
-//             categoriesListContainer.querySelector('.js-categories-current').classList.remove('js-categories-current');
-//             target.classList.add('js-categories-current');
-            
-//             if(categorieName) {
-//                 showBooksByCategorie(categorieName);
-//             } else {
-//                 showTopBooks();
-//             }
-//         }
-//     });
-    
-//     booksContainer.addEventListener('click', e => {
-//         e.preventDefault();
-    
-//         const target = e.target;
-    
-//         if(target.classList.contains('books-btn-see-more')) {
-//             const categorieName = target.dataset.categorieName;
-    
-//             categoriesListContainer.querySelector('.js-categories-current').classList.remove('js-categories-current');
-//             categoriesListContainer.querySelector('[data-categorieName="'+categorieName+'"]').classList.add('js-categories-current');
-            
-//             showBooksByCategorie(categorieName);
-//         }
-//     });
-// }
 import { getTopBooks, getCategoryList, getBooksByCategory } from './booksAPI.js';
 
 const booksContainer = document.querySelector('.books-box');
@@ -170,10 +77,12 @@ function handleCategoryClick(e) {
         categoriesListContainer.querySelector('.js-categories-current').classList.remove('js-categories-current');
         target.classList.add('js-categories-current');
 
-        if (categoryName) {
-            showBooksByCategory(categoryName);
-        } else {
+        if (categoryName === '') {
+            // Якщо натиснуто "Усі категорії", показати TopBooks
             showTopBooks();
+        } else {
+            // Якщо натиснуто конкретну категорію, показати книги з цієї категорії
+            showBooksByCategory(categoryName);
         }
     }
 }

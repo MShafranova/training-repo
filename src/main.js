@@ -109,9 +109,9 @@ function insertMarkupIntoCategoriesMain(markup) {
 export const renderTopBooks = (data) => {
     const { book_image, title, author, _id } = book
     const categoriesTopBooks = data.map(el => {
-        const categorieName = el.list_name;
+        const categoryName = el.list_name;
         return `<div class="books-box-holder">
-        <h3 class="books-box-subtitle">${categorieName}</h3>
+        <h3 class="books-box-subtitle">${categoryName}</h3>
         <ul class="books-box-list">
         <li class="books-box-itm" id="">
         <div class="books-box-wrap">
@@ -130,7 +130,7 @@ export const renderTopBooks = (data) => {
         </div>
       </li>
       </ul>
-          <button class="books-btn-see-more" type="button" data-categorieName="${categorieName}">see more</button>
+          <button class="books-btn-see-more" type="button" data-categoryName="${categoryName}">see more</button>
         </div>`;
     }).join('');
   
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
 if (seeMoreBtn) {
 
         seeMoreBtn.addEventListener('click', async (event) => {
-            const selectedCategory = event.target.dataset.categorieName;
+            const selectedCategory = event.target.dataset.categoryName;
             await handleClick(selectedCategory);
         });
 

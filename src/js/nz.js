@@ -136,8 +136,8 @@ export async function showCategories() {
 
 // ==============================================================
 //Function for display category books
-export async function showBooksByCategorie(categorieName) {
-    const renderedCat = await getBooksByCategory(categorieName);
+export async function showBooksByCategorie(categoryName) {
+    const renderedCat = await getBooksByCategory(categoryName);
 
      booksContainer.innerHTML = renderedCat;
      wrapLastWord();
@@ -177,7 +177,7 @@ const windowWidthStart = window.innerWidth;
 let ctrlBreikpoint = booksPerRowFunction(windowWidthStart);
 
 async function changeTopDisplay() {
-    const isAllCats = document.querySelector('.categories-nav.active').dataset.categorieName;
+    const isAllCats = document.querySelector('.categories-nav.active').dataset.categoryName;
 
     if(!isAllCats) {
         const windowWidth = window.innerWidth;
@@ -206,13 +206,13 @@ if(booksContainer) {
         const target = e.target;
     
         if(target.tagName === 'A') {
-            const categorieName = target.dataset.categorieName;
+            const categoryName = target.dataset.categoryName;
     
             categoriesListContainer.querySelector('.active').classList.remove('active');
             target.classList.add('active');
             
-            if(categorieName) {
-                showBooksByCategorie(categorieName);
+            if(categoryName) {
+                showBooksByCategorie(categoryName);
             } else {
                 showTopBooks();
             }
@@ -225,12 +225,12 @@ if(booksContainer) {
         const target = e.target;
     
         if(target.classList.contains('books-btn')) {
-            const categorieName = target.dataset.categorieName;
+            const categoryName = target.dataset.categoryName;
     
             categoriesListContainer.querySelector('.active').classList.remove('active');
-            categoriesListContainer.querySelector('[data-categorieName="'+categorieName+'"]').classList.add('active');
+            categoriesListContainer.querySelector('[data-categoryName="'+categoryName+'"]').classList.add('active');
             
-            showBooksByCategorie(categorieName);
+            showBooksByCategorie(categoryName);
         }
     });
 
@@ -344,8 +344,8 @@ if(booksContainer) {
 // }
 
 
-// export async function showBooksByCategorie(categorieName) {
-//     const renderedCat = await getBooksByCategory(categorieName);
+// export async function showBooksByCategorie(categoryName) {
+//     const renderedCat = await getBooksByCategory(categoryName);
 
 //      booksContainer.innerHTML = renderedCat;
      

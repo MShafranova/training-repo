@@ -1,13 +1,13 @@
 //Render top books
 export const renderTopBooks = (data, booksPerRow) => {;
     const categoriesTopBooks = data.map(el => {
-        const categorieName = el.list_name;
+        const categoryName = el.list_name;
         const books = renderOneBook(el.books.slice(0, booksPerRow))
         return `<div class="books-category-container">
-        <h3 class="books-category-title">${categorieName}</h3>
+        <h3 class="books-category-title">${categoryName}</h3>
         <ul class="books-list">${books}</ul>
         <div class="books-btn-container">
-          <button data-categorieName="${categorieName}" type="button" class="books-btn">see more</button>
+          <button data-categoryName="${categoryName}" type="button" class="books-btn">see more</button>
         </div>
       </div>`;
     }).join('');
@@ -19,12 +19,12 @@ export const renderTopBooks = (data, booksPerRow) => {;
 export const renderCategoriesList = (data) => {
   const categoriesItems = data.map(el => {
     return `<li class="categories-list">
-      <a href="#" data-categorieName="${el.list_name}" class="categories-nav">${el.list_name}</a>
+      <a href="#" data-categoryName="${el.list_name}" class="categories-nav">${el.list_name}</a>
     </li>`;
   }).join('');
 
   return `<li class="categories-list">
-  <a href="#" data-categorieName="" class="categories-nav active">All categories</a>
+  <a href="#" data-categoryName="" class="categories-nav active">All categories</a>
   </li>${categoriesItems}`;
 }
 
