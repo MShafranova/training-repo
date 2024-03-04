@@ -24,11 +24,18 @@ export const getCategoryList = async () => {
   return renderCategoriesList(data);
 };
 
-export const getBooksByCategory = async (categoryName) => {
+
+export const getBooksByCategory = async (categoryName = '') => {
   const data = await fetchData('/category/', { category: categoryName });
-  return renderBooksByCategory(data, categoryName);
+  return renderBooksByCategory(data);
 };
 
 export const getBookInfo = async (id) => {
   return fetchData(`/${id}`);
 };
+// export const getBooksByCategory = async (categoryName = el.list_name) => {
+//   const data = await fetchData('/category/', { category: categoryName });
+//   return renderBooksByCategory(data, categoryName);
+// };
+
+

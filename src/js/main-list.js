@@ -36,13 +36,14 @@ export async function showTopBooks() {
 // Function to display books by category
 export async function showBooksByCategory(categoryName) {
     const renderedBooks = await getBooksByCategory(categoryName);
-    showBooks(renderedBooks);
-}
-
-// Function to wrap the last word in the title
-function wrapLastWord(titleElement) {
-    const textContent = titleElement.textContent.split(" ");
-    const lastWord = textContent.pop();
+    return showBooks(renderedBooks);
+  }
+  
+  
+  // Function to wrap the last word in the title
+  function wrapLastWord(titleElement) {
+      const textContent = titleElement.textContent.split(" ");
+      const lastWord = textContent.pop();
     const updatedContent = textContent.join(" ") + (textContent.length > 0 ? ` <span class="books-title-color">${lastWord}</span>` : lastWord);
     titleElement.innerHTML = updatedContent;
 }
@@ -61,7 +62,7 @@ function determineBooksPerRow(windowWidth) {
 if (booksContainer) {
     showTopBooks();
     showCategories();
-
+    
     categoriesListContainer.addEventListener('click', handleCategoryClick);
     booksContainer.addEventListener('click', handleSeeMoreClick);
 }
@@ -70,10 +71,10 @@ if (booksContainer) {
 function handleCategoryClick(e) {
     e.preventDefault();
     const target = e.target;
-
+    
     if (target.tagName === 'A') {
         const categoryName = target.dataset.categoryName;
-
+        
         categoriesListContainer.querySelector('.js-categories-current').classList.remove('js-categories-current');
         target.classList.add('js-categories-current');
 
@@ -91,13 +92,18 @@ function handleCategoryClick(e) {
 function handleSeeMoreClick(e) {
     e.preventDefault();
     const target = e.target;
-
+    
     if (target.classList.contains('books-btn-see-more')) {
         const categoryName = target.dataset.categoryName;
-
+        
         categoriesListContainer.querySelector('.js-categories-current').classList.remove('js-categories-current');
         categoriesListContainer.querySelector(`[data-categoryName="${categoryName}"]`).classList.add('js-categories-current');
-
+        
         showBooksByCategory(categoryName);
     }
 }
+
+// export async function showBooksByCategory(categoryName) {
+//     const renderedBooks = await getBooksByCategory(categoryName);
+//     booksContainer.innerHTML = showBooks(renderedBooks);
+// }
